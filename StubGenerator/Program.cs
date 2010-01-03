@@ -14,6 +14,27 @@ namespace StubGenerator
     }
 
     /// <summary>
+    /// This class will try to parse the documentation files found in the
+    /// original git documentation folder.
+    /// Currently it only contains the Parse method.
+    /// </summary>
+    public static class DocumentationParser
+    {
+        
+        /// <summary>
+        /// This method will try to parse one file and will return all
+        /// options/arguments found.
+        /// </summary>
+        /// <param name="file">The file which should be parsed.</param>
+        /// <returns>List of OptArgs containing all options/arguments found.</returns>
+        public static List<OptArg> Parse(string file)
+        {
+
+            return new List<OptArg>();
+        }
+    }
+
+    /// <summary>
     /// A struct containing the name, description and suggested delegate-to-be of the
     /// argument/option
     /// </summary>
