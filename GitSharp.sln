@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Git", "Git\Git.csproj", "{2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitSharp", "GitSharp\GitSharp.csproj", "{7311850F-619A-4241-B09F-157792C75FBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StubGenerator", "StubGenerator\StubGenerator.csproj", "{41389F98-63BD-4855-BB92-49592F0DB83D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{7311850F-619A-4241-B09F-157792C75FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7311850F-619A-4241-B09F-157792C75FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7311850F-619A-4241-B09F-157792C75FBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41389F98-63BD-4855-BB92-49592F0DB83D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41389F98-63BD-4855-BB92-49592F0DB83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41389F98-63BD-4855-BB92-49592F0DB83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41389F98-63BD-4855-BB92-49592F0DB83D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

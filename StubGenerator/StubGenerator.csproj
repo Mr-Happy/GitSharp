@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>fee90067-0e41-4a81-8246-cc058f4b9204</ProjectGuid>
+    <ProjectGuid>{41389F98-63BD-4855-BB92-49592F0DB83D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StubGenerator</RootNamespace>
