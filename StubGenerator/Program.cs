@@ -10,6 +10,7 @@ namespace StubGenerator
     {
         static void Main(string[] args)
         {
+            DocumentationParser.Parse(@"c:\code\csharp\git\documentation\git-merge.txt");
         }
     }
 
@@ -43,14 +44,158 @@ namespace StubGenerator
             return new List<OptArg>();
         }
 
+        // ([Mr Happy] Note/keep in mind that the word "option" is used in a few (potentially confusing) different ways.
+        //             It is meant as the input, as well as a specific option which is something else than an argument.
+        //             I just suck at naming stuff ^^.
+
+        /// <summary>
+        /// This method tries to categorize the input as an Option or Argument.
+        /// It also tries to appoint a delegate which can be used w/ nDesk.
+        /// 
+        /// </summary>
+        /// <param name="options">A List containing all options</param>
+        /// <param name="startIndex">The index of the starting entry in the List of the option which should be parsed</param>
+        /// <param name="endIndex">The index of the ending entry in the List of the option which should be parsed</param>
+        /// <returns>An OptArg struct containing the parsed option.</returns>
+        public static List<OptArg> ParseOption(List<string> options, int startIndex, int endIndex)
+        {
+            if(startIndex == endIndex)
+            {
+                throw new ArgumentException("An option can't be only line in the documentation...", "endIndex");
+            }
+            List<OptArg> resultingOptArgs = new List<OptArg>();
+
+            string description = "";
+
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                if (options[i].StartsWith("<"))
+                {
+                    //ignore it.
+                }
+                else if (options[i].StartsWith("-"))
+                {
+                    // In some documentation files the short options is listed
+                    // before the long version. But in others it's the other way
+                    // around.
+
+                    if (options[i][1] == '-') //If it is a long option try to find a the short one
+                    {
+                        OptArg tempOpt = new OptArg();
+                        string firstLetter = options[i][2].ToString();
+                        string longName = options[i].Replace("=", " ").Replace("::", "").Substring(2).Split(' ')[0]; // Only use the option name itself.
+
+                        if (options[i + 1].StartsWith("-" + firstLetter)) // Found short version.
+                        {
+                            if (options[i + 1].Contains("<") || options[i].Contains("<") || options[i].Contains("=")) //the option takes an argument
+                            {
+                                tempOpt.Name = firstLetter + "|";
+                                tempOpt.Name += longName;
+                                tempOpt.Name += "=";
+
+                                longName = longName.ToUpper()[0] + longName.Substring(1).Replace("-", "");
+                                tempOpt.Deleg = "v => cmd." + longName + " = v";
+                            }
+                            else
+                            {
+                                tempOpt.Name = firstLetter + "|";
+                                tempOpt.Name += longName;
+                                longName = longName.ToUpper()[0] + longName.Substring(1).Replace("-", "");
+                                tempOpt.Deleg = "v => cmd." + longName + " = true";
+                            }
+                            resultingOptArgs.Add(tempOpt);
+                            i++; // Skip parsing the short version.
+                        }
+                        else // No short version available.
+                        {
+                            if (options[i + 1].Contains("<") || options[i].Contains("<") || options[i].Contains("=")) //the option takes an argument
+                            {
+                                tempOpt.Name = longName;
+                                tempOpt.Name += "=";
+
+                                longName = longName.ToUpper()[0] + longName.Substring(1).Replace("-", "");
+                                tempOpt.Deleg = "v => cmd." + longName + " = v";
+                            }
+                            else
+                            {
+                                tempOpt.Name = longName;
+                                longName = longName.ToUpper()[0] + longName.Substring(1).Replace("-", "");
+                                tempOpt.Deleg = "v => cmd." + longName + " = true";
+                            }
+                            resultingOptArgs.Add(tempOpt);
+                        }
+                    }
+                    else // If it is the short option try to find the long one.
+                    {
+                        OptArg tempOpt = new OptArg();
+                        string firstLetter = options[i][1].ToString();
+
+                        if (options[i + 1].StartsWith("--" + firstLetter)) // Found the long version.
+                        {
+                            string longName = options[i + 1].Replace("=", " ").Replace("::", "").Substring(2).Split(' ')[0]; // Only use the option name itself.
+                            if (options[i + 1].Contains("<") || options[i].Contains("<") || options[i + 1].Contains("=")) //the option takes an argument
+                            {
+                                tempOpt.Name = firstLetter + "|";
+                                tempOpt.Name += longName;
+                                tempOpt.Name += "=";
+
+                                longName = longName.ToUpper()[0] + longName.Substring(1).Replace("-", "");
+                                tempOpt.Deleg = "v => cmd." + longName + " = v";
+                            }
+                            else
+                            {
+                                tempOpt.Name = firstLetter + "|";
+                                tempOpt.Name += longName;
+                                longName = longName.ToUpper()[0] + longName.Substring(1).Replace("-", "");
+                                tempOpt.Deleg = "v => cmd." + longName + " = true";
+                            }
+                            resultingOptArgs.Add(tempOpt);
+                            i++; // Skip parsing the long version.
+                        }
+                        else // No long version available.
+                        {
+                            if (options[i + 1].Contains("<") || options[i].Contains("<") || options[i].Contains("=")) //the option takes an argument
+                            {
+                                tempOpt.Name = firstLetter;
+                                tempOpt.Name += "=";
+
+                                tempOpt.Deleg = "v => cmd." + firstLetter.ToUpper() + " = v";
+                            }
+                            else
+                            {
+                                tempOpt.Name = firstLetter;
+                                tempOpt.Deleg = "v => cmd." + firstLetter.ToUpper() + " = true";
+                            }
+                            resultingOptArgs.Add(tempOpt);
+                        }
+                    }
+                    //resultingOptArgs.Add(new op
+                }
+                else
+                {
+                    description += options[i] + "\n";
+                }
+            }
+
+            resultingOptArgs.ForEach( oa => oa.Descr = description);
+
+            //for (int i = 0; i < resultingOptArgs.Count; i++)
+            //{
+            //    resultingOptArgs.ElementAt<OptArg>(i).Descr = description;
+            //}
+
+            return resultingOptArgs;
+        }
+
+        //private static OptArg 
         /// <summary>
         /// This method scans each line of the file-to-be-parsed, when it finds
         /// the "OPTIONS" caption, it reads every following line into a new list.
         /// Untill it finds the beginning of the next paragraph.
         /// </summary>
         /// <param name="content">The content of the file (usually File.ReadAllLines())</param>
-        /// <returns>a List containig each line of the option paragraph.</returns>
-        private static List<string> GetOptionPart(string[] content)
+        /// <returns>a List containig each line of the option paragraph</returns>
+        public static List<string> GetOptionPart(string[] content)
         {
             List<string> optionPart = new List<string>();
 
@@ -87,10 +232,10 @@ namespace StubGenerator
     }
 
     /// <summary>
-    /// A struct containing the name, description and suggested delegate-to-be of the
+    /// A class containing the name, description and suggested delegate-to-be of the
     /// argument/option
     /// </summary>
-    public struct OptArg
+    public class OptArg
     {
 		/// <summary>
 		/// The command/option used on the CLI
