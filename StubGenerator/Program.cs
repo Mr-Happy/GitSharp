@@ -11,10 +11,26 @@ namespace StubGenerator
         [STAThread]
         static void Main(string[] args)
         {
-            List<OptArg> result = DocumentationParser.Parse(@"c:\code\csharp\git\documentation\git-merge.txt");
+          //  @"c:\code\csharp\git\documentation\git-clone.txt"
+
+            string[] fileList = Directory.GetFiles(@"c:\code\csharp\gitsharp\stubgenerator\resources\");
+
             string text = "";
+            foreach(string file in fileList)
+            {
+                List<OptArg> result = DocumentationParser.Parse(file);
+                string clazz = new FileInfo(file).Name;
+                clazz = clazz.Replace(".txt", "").Replace("-", "").Substring(3);
+                clazz = clazz.ToUpper()[0] + clazz.Substring(1);
+                text += CommandGenerator.GenerateCLI(clazz, result);
+            }
+            
+            
+            System.Windows.Forms.Clipboard.SetText(text);
 
             Console.ReadKey();
         }
+
+
     }
 }

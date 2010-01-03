@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace StubGenerator
 {
@@ -60,10 +61,6 @@ namespace StubGenerator
         /// <returns>An OptArg struct containing the parsed option.</returns>
         public static List<OptArg> ParseOption(List<string> options, int startIndex, int endIndex)
         {
-            if (startIndex == endIndex)
-            {
-                throw new ArgumentException("An option can't be only line in the documentation...", "endIndex");
-            }
             List<OptArg> resultingOptArgs = new List<OptArg>();
 
             string description = "";
@@ -86,7 +83,7 @@ namespace StubGenerator
                         string firstLetter = options[i][2].ToString();
                         string longName = options[i].Replace("=", " ").Replace("::", "").Substring(2).Split(' ')[0]; // Only use the option name itself.
 
-                        if (options[i + 1].StartsWith("-" + firstLetter)) // Found short version.
+                        if (options[i + 1].StartsWith("-") && !options[1 + 1].StartsWith("--")) // Found short version.
                         {
                             if (options[i + 1].Contains("<") || options[i].Contains("<") || options[i].Contains("=")) //the option takes an argument
                             {
@@ -131,7 +128,7 @@ namespace StubGenerator
                         OptArg tempOpt = new OptArg();
                         string firstLetter = options[i][1].ToString();
 
-                        if (options[i + 1].StartsWith("--" + firstLetter)) // Found the long version.
+                        if (options[i + 1].StartsWith("--")) // Found the long version.
                         {
                             string longName = options[i + 1].Replace("=", " ").Replace("::", "").Substring(2).Split(' ')[0]; // Only use the option name itself.
                             if (options[i + 1].Contains("<") || options[i].Contains("<") || options[i + 1].Contains("=")) //the option takes an argument
