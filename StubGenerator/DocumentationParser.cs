@@ -83,7 +83,7 @@ namespace StubGenerator
                         string firstLetter = options[i][2].ToString();
                         string longName = options[i].Replace("=", " ").Replace("::", "").Substring(2).Split(' ')[0]; // Only use the option name itself.
 
-                        if (options[i + 1].StartsWith("-") && !options[1 + 1].StartsWith("--")) // Found short version.
+                        if (options[i + 1].StartsWith("-") && !options[i + 1].StartsWith("--")) // Found short version.
                         {
                             if (options[i + 1].Contains("<") || options[i].Contains("<") || options[i].Contains("=")) //the option takes an argument
                             {
@@ -96,8 +96,7 @@ namespace StubGenerator
                             }
                             else
                             {
-                                tempOpt.Name = firstLetter + "|";
-                                tempOpt.Name += longName;
+                                tempOpt.Name = longName;
                                 longName = longName.ToUpper()[0] + longName.Substring(1).Replace("-", "");
                                 tempOpt.Deleg = "v => cmd." + longName + " = true";
                             }

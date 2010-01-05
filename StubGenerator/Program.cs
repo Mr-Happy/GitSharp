@@ -23,6 +23,8 @@ namespace StubGenerator
                 clazz = clazz.Replace(".txt", "").Replace("-", "").Substring(3);
                 clazz = clazz.ToUpper()[0] + clazz.Substring(1);
                 text += CommandGenerator.GenerateCLI(clazz, result);
+                text += "\n\n---------------------------\n\n";
+                text += CommandGenerator.GenerateAPI(clazz, result);
             }
             
             
